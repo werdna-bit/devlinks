@@ -15,6 +15,13 @@
       "when": 1772880533984,
       "tag": "0001_flawless_weapon_omega",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772896696277,
+      "tag": "0002_special_gladiator",
+      "breakpoints": true
     }
   ]
 }

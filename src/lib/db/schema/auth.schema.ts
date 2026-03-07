@@ -75,9 +75,24 @@ export const verification = pgTable(
 	(table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
+export const links = pgTable("links", {
+	id: text("id").primaryKey(),
+	platform: text("platform").notNull(),
+	url: text("url").notNull(),
+	userId: text("user_id")
+		.notNull()
+		.references(() => user.id, { onDelete: "cascade" }),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+	updatedAt: timestamp("updated_at")
+		.defaultNow()
+		.$onUpdate(() => /* @__PURE__ */ new Date())
+		.notNull(),
+});
+
 export const userRelations = relations(user, ({ many }) => ({
 	sessions: many(session),
 	accounts: many(account),
+	links: many(links),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -90,6 +105,12 @@ export const sessionRelations = relations(session, ({ one }) => ({
 export const accountRelations = relations(account, ({ one }) => ({
 	user: one(user, {
 		fields: [account.userId],
+		references: [user.id],
+	}),
+}));
+export const linksRelations = relations(links, ({ one }) => ({
+	user: one(user, {
+		fields: [links.userId],
 		references: [user.id],
 	}),
 }));
