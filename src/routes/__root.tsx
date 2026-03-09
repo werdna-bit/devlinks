@@ -34,11 +34,11 @@ export const Route = createRootRouteWithContext<{
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "TanStarter",
+				title: "devlinks",
 			},
 			{
 				name: "description",
-				content: "A minimal starter template for 🏝 TanStack Start.",
+				content: "Link sharing app",
 			},
 		],
 		links: [{ rel: "stylesheet", href: appCss }],

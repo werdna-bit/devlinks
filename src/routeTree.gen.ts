@@ -14,8 +14,10 @@ import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuestSignupRouteImport } from './routes/_guest/signup'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
+import { Route as AuthPreviewRouteRouteImport } from './routes/_auth/preview/route'
 import { Route as AuthDashboardRouteRouteImport } from './routes/_auth/dashboard/route'
 import { Route as AuthAppRouteRouteImport } from './routes/_auth/app/route'
+import { Route as AuthPreviewIndexRouteImport } from './routes/_auth/preview/index'
 import { Route as AuthDashboardIndexRouteImport } from './routes/_auth/dashboard/index'
 import { Route as AuthAppIndexRouteImport } from './routes/_auth/app/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -43,6 +45,11 @@ const GuestLoginRoute = GuestLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => GuestRouteRoute,
 } as any)
+const AuthPreviewRouteRoute = AuthPreviewRouteRouteImport.update({
+  id: '/preview',
+  path: '/preview',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AuthDashboardRouteRoute = AuthDashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -52,6 +59,11 @@ const AuthAppRouteRoute = AuthAppRouteRouteImport.update({
   id: '/app',
   path: '/app',
   getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthPreviewIndexRoute = AuthPreviewIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthPreviewRouteRoute,
 } as any)
 const AuthDashboardIndexRoute = AuthDashboardIndexRouteImport.update({
   id: '/',
@@ -73,11 +85,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AuthAppRouteRouteWithChildren
   '/dashboard': typeof AuthDashboardRouteRouteWithChildren
+  '/preview': typeof AuthPreviewRouteRouteWithChildren
   '/login': typeof GuestLoginRoute
   '/signup': typeof GuestSignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/': typeof AuthAppIndexRoute
   '/dashboard/': typeof AuthDashboardIndexRoute
+  '/preview/': typeof AuthPreviewIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +100,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app': typeof AuthAppIndexRoute
   '/dashboard': typeof AuthDashboardIndexRoute
+  '/preview': typeof AuthPreviewIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -94,11 +109,13 @@ export interface FileRoutesById {
   '/_guest': typeof GuestRouteRouteWithChildren
   '/_auth/app': typeof AuthAppRouteRouteWithChildren
   '/_auth/dashboard': typeof AuthDashboardRouteRouteWithChildren
+  '/_auth/preview': typeof AuthPreviewRouteRouteWithChildren
   '/_guest/login': typeof GuestLoginRoute
   '/_guest/signup': typeof GuestSignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/app/': typeof AuthAppIndexRoute
   '/_auth/dashboard/': typeof AuthDashboardIndexRoute
+  '/_auth/preview/': typeof AuthPreviewIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -106,13 +123,22 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/dashboard'
+    | '/preview'
     | '/login'
     | '/signup'
     | '/api/auth/$'
     | '/app/'
     | '/dashboard/'
+    | '/preview/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/signup' | '/api/auth/$' | '/app' | '/dashboard'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/api/auth/$'
+    | '/app'
+    | '/dashboard'
+    | '/preview'
   id:
     | '__root__'
     | '/'
@@ -120,11 +146,13 @@ export interface FileRouteTypes {
     | '/_guest'
     | '/_auth/app'
     | '/_auth/dashboard'
+    | '/_auth/preview'
     | '/_guest/login'
     | '/_guest/signup'
     | '/api/auth/$'
     | '/_auth/app/'
     | '/_auth/dashboard/'
+    | '/_auth/preview/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -171,6 +199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuestLoginRouteImport
       parentRoute: typeof GuestRouteRoute
     }
+    '/_auth/preview': {
+      id: '/_auth/preview'
+      path: '/preview'
+      fullPath: '/preview'
+      preLoaderRoute: typeof AuthPreviewRouteRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/dashboard': {
       id: '/_auth/dashboard'
       path: '/dashboard'
@@ -184,6 +219,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app'
       preLoaderRoute: typeof AuthAppRouteRouteImport
       parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/preview/': {
+      id: '/_auth/preview/'
+      path: '/'
+      fullPath: '/preview/'
+      preLoaderRoute: typeof AuthPreviewIndexRouteImport
+      parentRoute: typeof AuthPreviewRouteRoute
     }
     '/_auth/dashboard/': {
       id: '/_auth/dashboard/'
@@ -232,14 +274,27 @@ const AuthDashboardRouteRouteChildren: AuthDashboardRouteRouteChildren = {
 const AuthDashboardRouteRouteWithChildren =
   AuthDashboardRouteRoute._addFileChildren(AuthDashboardRouteRouteChildren)
 
+interface AuthPreviewRouteRouteChildren {
+  AuthPreviewIndexRoute: typeof AuthPreviewIndexRoute
+}
+
+const AuthPreviewRouteRouteChildren: AuthPreviewRouteRouteChildren = {
+  AuthPreviewIndexRoute: AuthPreviewIndexRoute,
+}
+
+const AuthPreviewRouteRouteWithChildren =
+  AuthPreviewRouteRoute._addFileChildren(AuthPreviewRouteRouteChildren)
+
 interface AuthRouteRouteChildren {
   AuthAppRouteRoute: typeof AuthAppRouteRouteWithChildren
   AuthDashboardRouteRoute: typeof AuthDashboardRouteRouteWithChildren
+  AuthPreviewRouteRoute: typeof AuthPreviewRouteRouteWithChildren
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthAppRouteRoute: AuthAppRouteRouteWithChildren,
   AuthDashboardRouteRoute: AuthDashboardRouteRouteWithChildren,
+  AuthPreviewRouteRoute: AuthPreviewRouteRouteWithChildren,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
