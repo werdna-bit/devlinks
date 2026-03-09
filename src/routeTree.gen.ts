@@ -14,6 +14,7 @@ import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuestSignupRouteImport } from './routes/_guest/signup'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
+import { Route as GuestURouteRouteImport } from './routes/_guest/u/route'
 import { Route as AuthPreviewRouteRouteImport } from './routes/_auth/preview/route'
 import { Route as AuthDashboardRouteRouteImport } from './routes/_auth/dashboard/route'
 import { Route as AuthAppRouteRouteImport } from './routes/_auth/app/route'
@@ -21,6 +22,7 @@ import { Route as AuthPreviewIndexRouteImport } from './routes/_auth/preview/ind
 import { Route as AuthDashboardIndexRouteImport } from './routes/_auth/dashboard/index'
 import { Route as AuthAppIndexRouteImport } from './routes/_auth/app/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as GuestUUsernameRouteImport } from './routes/_guest/u/$username'
 
 const GuestRouteRoute = GuestRouteRouteImport.update({
   id: '/_guest',
@@ -43,6 +45,11 @@ const GuestSignupRoute = GuestSignupRouteImport.update({
 const GuestLoginRoute = GuestLoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => GuestRouteRoute,
+} as any)
+const GuestURouteRoute = GuestURouteRouteImport.update({
+  id: '/u',
+  path: '/u',
   getParentRoute: () => GuestRouteRoute,
 } as any)
 const AuthPreviewRouteRoute = AuthPreviewRouteRouteImport.update({
@@ -80,14 +87,21 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuestUUsernameRoute = GuestUUsernameRouteImport.update({
+  id: '/$username',
+  path: '/$username',
+  getParentRoute: () => GuestURouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AuthAppRouteRouteWithChildren
   '/dashboard': typeof AuthDashboardRouteRouteWithChildren
   '/preview': typeof AuthPreviewRouteRouteWithChildren
+  '/u': typeof GuestURouteRouteWithChildren
   '/login': typeof GuestLoginRoute
   '/signup': typeof GuestSignupRoute
+  '/u/$username': typeof GuestUUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/': typeof AuthAppIndexRoute
   '/dashboard/': typeof AuthDashboardIndexRoute
@@ -95,8 +109,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/u': typeof GuestURouteRouteWithChildren
   '/login': typeof GuestLoginRoute
   '/signup': typeof GuestSignupRoute
+  '/u/$username': typeof GuestUUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app': typeof AuthAppIndexRoute
   '/dashboard': typeof AuthDashboardIndexRoute
@@ -110,8 +126,10 @@ export interface FileRoutesById {
   '/_auth/app': typeof AuthAppRouteRouteWithChildren
   '/_auth/dashboard': typeof AuthDashboardRouteRouteWithChildren
   '/_auth/preview': typeof AuthPreviewRouteRouteWithChildren
+  '/_guest/u': typeof GuestURouteRouteWithChildren
   '/_guest/login': typeof GuestLoginRoute
   '/_guest/signup': typeof GuestSignupRoute
+  '/_guest/u/$username': typeof GuestUUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/app/': typeof AuthAppIndexRoute
   '/_auth/dashboard/': typeof AuthDashboardIndexRoute
@@ -124,8 +142,10 @@ export interface FileRouteTypes {
     | '/app'
     | '/dashboard'
     | '/preview'
+    | '/u'
     | '/login'
     | '/signup'
+    | '/u/$username'
     | '/api/auth/$'
     | '/app/'
     | '/dashboard/'
@@ -133,8 +153,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/u'
     | '/login'
     | '/signup'
+    | '/u/$username'
     | '/api/auth/$'
     | '/app'
     | '/dashboard'
@@ -147,8 +169,10 @@ export interface FileRouteTypes {
     | '/_auth/app'
     | '/_auth/dashboard'
     | '/_auth/preview'
+    | '/_guest/u'
     | '/_guest/login'
     | '/_guest/signup'
+    | '/_guest/u/$username'
     | '/api/auth/$'
     | '/_auth/app/'
     | '/_auth/dashboard/'
@@ -199,6 +223,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuestLoginRouteImport
       parentRoute: typeof GuestRouteRoute
     }
+    '/_guest/u': {
+      id: '/_guest/u'
+      path: '/u'
+      fullPath: '/u'
+      preLoaderRoute: typeof GuestURouteRouteImport
+      parentRoute: typeof GuestRouteRoute
+    }
     '/_auth/preview': {
       id: '/_auth/preview'
       path: '/preview'
@@ -247,6 +278,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_guest/u/$username': {
+      id: '/_guest/u/$username'
+      path: '/$username'
+      fullPath: '/u/$username'
+      preLoaderRoute: typeof GuestUUsernameRouteImport
+      parentRoute: typeof GuestURouteRoute
     }
   }
 }
@@ -301,12 +339,26 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
+interface GuestURouteRouteChildren {
+  GuestUUsernameRoute: typeof GuestUUsernameRoute
+}
+
+const GuestURouteRouteChildren: GuestURouteRouteChildren = {
+  GuestUUsernameRoute: GuestUUsernameRoute,
+}
+
+const GuestURouteRouteWithChildren = GuestURouteRoute._addFileChildren(
+  GuestURouteRouteChildren,
+)
+
 interface GuestRouteRouteChildren {
+  GuestURouteRoute: typeof GuestURouteRouteWithChildren
   GuestLoginRoute: typeof GuestLoginRoute
   GuestSignupRoute: typeof GuestSignupRoute
 }
 
 const GuestRouteRouteChildren: GuestRouteRouteChildren = {
+  GuestURouteRoute: GuestURouteRouteWithChildren,
   GuestLoginRoute: GuestLoginRoute,
   GuestSignupRoute: GuestSignupRoute,
 }

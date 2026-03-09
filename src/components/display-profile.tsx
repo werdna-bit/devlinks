@@ -1,7 +1,10 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { env } from "@/env/client";
 import { platformsRecord } from "@/helpers/link-config";
 import type { AuthQueryResult } from "@/lib/auth/queries";
+import Logo from "./icons/logo";
+import LogoSmall from "./icons/logo-small";
 import type { Link as LinkType } from "./link-provider";
 import { Button } from "./ui/button";
 
@@ -14,8 +17,10 @@ export const ProfileDisplay = ({ links, user }: Props) => {
 		select: (location) => location.pathname,
 	});
 
+	if (!user) return null;
+
 	const copyToClipboard = async (): Promise<boolean> => {
-		const fullUrl = window.location.href;
+		const fullUrl = `${env.VITE_BASE_URL}/u/${user?.username}`;
 		try {
 			await navigator.clipboard.writeText(fullUrl);
 			toast.success("Copied to clipboard", { position: "bottom-center" });
@@ -25,7 +30,6 @@ export const ProfileDisplay = ({ links, user }: Props) => {
 			return false;
 		}
 	};
-	if (!user) return null;
 
 	return (
 		<div className="w-full flex-1 relative bg-zinc-100">
@@ -33,13 +37,13 @@ export const ProfileDisplay = ({ links, user }: Props) => {
 			<header className="w-full rounded-xl h-[8%] flex items-center max-w-7xl absolute left-1/2 -translate-x-1/2 top-8 justify-between border p-4 bg-white">
 				{pathname === "/preview" ? (
 					<>
+						{" "}
 						<Link
 							to="/dashboard"
 							className="flex items-center justify-center text-[#633CFF] hover:bg-[#633CFF] text-sm hover:text-white transition all duration-300 ease-in-out border p-2 border-[#633CFF] px-3 rounded-sm"
 						>
 							<p>Back to Editor</p>
 						</Link>
-
 						<Button
 							onClick={copyToClipboard}
 							type="submit"
@@ -49,7 +53,21 @@ export const ProfileDisplay = ({ links, user }: Props) => {
 						</Button>
 					</>
 				) : (
-					"work"
+					<>
+						<span className="hidden md:block">
+							<Logo />
+						</span>
+						<span className="md:hidden">
+							<LogoSmall />
+						</span>
+
+						<Link
+							to="/dashboard"
+							className="px-4 p-2 text-white rounded-md text-base font-[500]  purpleButton"
+						>
+							My Profile
+						</Link>
+					</>
 				)}
 			</header>
 			<section className="h-full w-full p-4 md:p-8 static z-100 flex items-center justify-center">

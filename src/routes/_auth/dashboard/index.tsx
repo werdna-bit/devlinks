@@ -9,8 +9,10 @@ import Logo from "@/components/icons/logo";
 import LogoSmall from "@/components/icons/logo-small";
 import LinkContainer from "@/components/link-container";
 import { useLinks } from "@/components/link-provider";
+import { LogOutButton } from "@/components/logout-button";
 import { Phone } from "@/components/phone";
 import Profile from "@/components/profile-container";
+import { SignOutButton } from "@/components/sign-out-button";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useStorage";
 
@@ -56,12 +58,18 @@ function RouteComponent() {
 							<p className="hidden md:block text-nowrap">Profile Details</p>
 						</button>
 					</div>
-					<Link
-						to="/preview"
-						className="text-[#633CFF] hover:bg-[#633CFF] hover:text-white transition all duration-300 ease-in-out border p-2 border-[#633CFF] px-3 rounded-sm"
-					>
-						<RiEyeLine size={17} />
-					</Link>
+					<div className="flex items-center gap-3">
+						<Link
+							to="/preview"
+							className="text-[#633CFF] hover:bg-[#633CFF] hover:text-white transition all duration-300 ease-in-out border p-2 border-[#633CFF] px-3 md:px-5 rounded-sm"
+						>
+							<span className="md:hidden">
+								<RiEyeLine size={17} />
+							</span>
+							<span className="hidden md:block">Preview</span>
+						</Link>
+						<LogOutButton />
+					</div>
 				</div>
 			</header>
 			<div className="flex flex-col md:flex-row max-w-7xl p-4 mx-auto gap-4  w-full">

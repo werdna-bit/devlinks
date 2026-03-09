@@ -1,7 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { useLinks } from "@/components/link-provider";
 
-export const Route = createFileRoute("/_auth/preview")({
+export const Route = createFileRoute("/_guest/u")({
 	component: AppLayout,
 });
 

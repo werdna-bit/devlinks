@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	index,
+	pgEnum,
+	pgTable,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
 	id: text("id").primaryKey(),
@@ -75,9 +82,22 @@ export const verification = pgTable(
 	(table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
+export const platformEnum = pgEnum("platform", [
+	"GitHub",
+	"LinkedIn",
+	"Stack Overflow",
+	"Dev.to",
+	"CodePen",
+	"GitLab",
+	"Medium",
+	"Hashnode",
+	"Portfolio",
+	"X (formerly Twitter)",
+]);
+
 export const links = pgTable("links", {
 	id: text("id").primaryKey(),
-	platform: text("platform").notNull(),
+	platform: platformEnum("platform").notNull(),
 	url: text("url").notNull(),
 	userId: text("user_id")
 		.notNull()
