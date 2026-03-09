@@ -42,30 +42,21 @@ function LoginForm() {
 				password: data.password,
 			});
 
-			// Throw error if login failed
 			if (result.error) {
 				throw new Error(result.error.message || "Invalid email or password");
 			}
-
 			return result;
 		},
-		onSuccess: async (result) => {
+		onSuccess: async () => {
+			toast.success("Successfully logged in. Welcome back");
+
+			// Invalidate auth cache
 			await queryClient.invalidateQueries({
 				queryKey: authQueryOptions().queryKey,
 			});
-			await queryClient.refetchQueries({
-				queryKey: authQueryOptions().queryKey,
-			});
 
-			toast.success(`Successfully logged in. Welcome back`);
-
-			setTimeout(async () => {
-				try {
-					await navigate({ to: "/dashboard" });
-				} catch (error) {
-					window.location.href = "/dashboard";
-				}
-			}, 100);
+			// Force immediate redirect - no await
+			window.location.replace("/dashboard");
 		},
 		onError: (error) => {
 			toast.error(error.message || "Invalid email or password");

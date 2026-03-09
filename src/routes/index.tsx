@@ -68,7 +68,7 @@ function UserAction() {
 		<div className="flex flex-col items-center gap-2">
 			<p>Welcome back, {user.name}!</p>
 			<Button
-				render={<Link to="/app" />}
+				render={<Link to="/dashboard" />}
 				className="mb-2 w-fit"
 				size="lg"
 				nativeButton={false}
