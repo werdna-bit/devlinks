@@ -62,20 +62,22 @@ export default function Profile({ user }: Props) {
 	const onSubmit: SubmitHandler<ProfileType> = async (data) => {
 		if (isPending) return;
 
-		const { data: response, error } = await authClient.isUsernameAvailable({
-			username: data.username,
-		});
-
-		if (error) {
-			toast.error("Failed to check username availability. Please try again.");
-			return;
-		}
-
-		if (!response?.available) {
-			setError("username", {
-				message: "Username is not available",
+		if (user?.username !== data.username) {
+			const { data: response, error } = await authClient.isUsernameAvailable({
+				username: data.username,
 			});
-			return;
+
+			if (error) {
+				toast.error("Failed to check username availability. Please try again.");
+				return;
+			}
+
+			if (!response?.available) {
+				setError("username", {
+					message: "Username is not available",
+				});
+				return;
+			}
 		}
 
 		updateProfile(data);
